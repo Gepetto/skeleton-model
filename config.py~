@@ -1,0 +1,2 @@
+mesh_path = 'whole_body/stl_osim'
+model_path = 'whole_body/wholebody.osim'
