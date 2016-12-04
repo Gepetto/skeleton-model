@@ -163,8 +163,3 @@ whether future versions of the GNU Lesser General Public License shall
 apply, that proxy's public statement of acceptance of any version is
 permanent authorization for you to choose that version for the
 Library.
-
-    Contact GitHub API Training Shop Blog About 
-
-    © 2016 GitHub, Inc. Terms Privacy Security Status Help 
-
