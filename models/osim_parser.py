@@ -212,7 +212,7 @@ class Osim2PinocchioModel:
         return self.joint_models
         
     
-    def buildModel(self, PyModel=None, filename=None):
+    def buildModel(self, PyModel=None, filename=None, mesh_path=None):
         ''' \ brief build a Pinocchio model given a PyModel
         \param[in] PyModel The python model which can be created using readOsim. Default is None
         \param[in] filename Path and name of the *.osim file which is used in case PyModel is not provided
@@ -246,7 +246,7 @@ class Osim2PinocchioModel:
             print 'Joint Name: '+joint_name
             print 'Parent Name :'+PyModel['Joints'][joint][0]['parent_body'][0], parent
             print 'Joint Model: ',joint_model
-            print '****'
+            
             
             ''' From OpenSim to Pinocchio
             '''
@@ -275,19 +275,21 @@ class Osim2PinocchioModel:
             # add to visuals list
             for mesh in range(0, len(PyModel['Visuals'][body][1]['geometry_file']) ):
                 visual_name = os.path.splitext(PyModel['Visuals'][body][1]['geometry_file'][mesh])[0]
-                filename = config.mesh_path+'/'+visual_name+'.stl'
+                filename = mesh_path+'/'+visual_name+'.stl'
+                print 'Filename: '+filename
                 transform = np.matrix(PyModel['Visuals'][body][1]['transform'][mesh],dtype=np.float64).T
                 transform[3:6] =  osMpi  *transform[3:6]
                 transform[0:3] =  osMpi * transform[0:3]
                 self.visuals = self.builder.createVisuals(parent, joint_name, filename, scale_factors, transform)
-            
+           
+            print '****'
         
-    def parseModel(self, filename):
+    def parseModel(self, filename, mesh_path):
         ''' parseModel(filename)
         Parses an OpenSim Model to a Pinocchio Model
         '''
         py=Osim2PythonModel()
-        return self.buildModel(py.readModel(filename))
+        return self.buildModel(py.readModel(filename), filename, mesh_path)
 
 
     
