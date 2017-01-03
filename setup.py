@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 #from distutils.core import setup
 
 setup(
-    name='Models',
+    name='models',
     description='Biomechanical and Robotic Models',
     version='1.0',
 
@@ -10,4 +10,8 @@ setup(
     
     author='Galo MALDONADO',
     author_email='galo.maldonado@laas.fr',
+    
+    extras_require = {
+        'Pioncchio':  ["pinocchio"]
+    }
 )
