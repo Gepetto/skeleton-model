@@ -1,5 +1,4 @@
 from setuptools import setup, find_packages
-#from distutils.core import setup
 
 setup(
     name='models',
@@ -11,7 +10,14 @@ setup(
     author='Galo MALDONADO',
     author_email='galo.maldonado@laas.fr',
     
-    extras_require = {
-        'Pioncchio':  ["pinocchio"]
-    }
+    #extras_requires = [
+    #    "pinocchio"
+    #],
+
+    classifiers=[
+        'Intended Audience :: Science/Research',
+        'Programming Language :: Python',
+        'Programming Language :: Python :: 2.7',
+    ],
+
 )
