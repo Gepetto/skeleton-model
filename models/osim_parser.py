@@ -300,7 +300,7 @@ class Osim2PinocchioModel:
 
 
 ''' *************** UTILS ******************* '''
-def readOsim(self, filename):
+def readOsim(filename):
     '''
     get an osim filename .mot or .sto  and return data as a python dictionary which consist of
     time, data, col_headers, units
