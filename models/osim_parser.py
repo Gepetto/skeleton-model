@@ -178,9 +178,8 @@ class Osim2PinocchioModel:
         self.model = self.builder.model
         self.joint_models = []
         self.visuals = self.builder.visuals
-        self.joint_limits = self.builder.joint_limits
         self.data = self.builder.data
-
+        
     def __OpenSimJointsToPynocchioJoints(self, PyModel):
         jts = 0 
         for joints in PyModel['Joints']:
@@ -232,7 +231,7 @@ class Osim2PinocchioModel:
             parent_name = PyModel['Joints'][joint][0]['parent_body'][0]
             id.append(parent_name)
         
-        
+        jointLimits = []
         for joint in range(0,len(PyModel['Joints'])):
             # don't take into account ground body and visual
             body = joint  + 1
@@ -241,12 +240,13 @@ class Osim2PinocchioModel:
             joint_id = body
             parent = id.index(PyModel['Joints'][joint][0]['parent_body'][0])
             joint_model = joint_models[joint][2]
+            jointLimits += PyModel['Joints'][joint][1]['range']
 
             print 'ID: ',joint_id
             print 'Joint Name: '+joint_name
-            print 'Parent Name :'+PyModel['Joints'][joint][0]['parent_body'][0], parent
+            print 'Parent Name: '+PyModel['Joints'][joint][0]['parent_body'][0], parent
             print 'Joint Model: ',joint_model
-            
+            print 'Joint Limits: ',PyModel['Joints'][joint][1]['range']
             
             ''' From OpenSim to Pinocchio
             '''
@@ -281,9 +281,10 @@ class Osim2PinocchioModel:
                 transform[3:6] =  osMpi  *transform[3:6]
                 transform[0:3] =  osMpi * transform[0:3]
                 self.visuals = self.builder.createVisuals(parent, joint_name, filename, scale_factors, transform)
-           
             print '****'
-        
+        #add constraints
+        self.lowerPositionLimit, self.upperPositionLimit = self.builder.addJointConstraints(np.matrix(jointLimits))
+
     def parseModel(self, filename, mesh_path):
         ''' parseModel(filename)
         Parses an OpenSim Model to a Pinocchio Model

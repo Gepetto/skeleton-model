@@ -1,5 +1,5 @@
 import pinocchio as se3
-
+import numpy as np
 class Pinocchio:
    def __init__(self):
       # Pinocchio Model
@@ -9,9 +9,7 @@ class Pinocchio:
       self.visuals = []
       self.visuals.append([0,'ground','none'])
       self.FrameType = se3.FrameType.OP_FRAME
-      # Constraints
-      self.joint_limits = []
-       
+             
    def buildModel(self, parent, joint_model, joint_placement, joint_name,
                             joint_id, body_inertia, body_placement, body_name):
       ''' Add a model to the kinematic three
@@ -32,7 +30,10 @@ class Pinocchio:
       self.visuals.append([parent, joint_name, filename, scale_factors, transform ])
       return self.visuals
 
-   #def createContraints(self,)
+   def addJointConstraints(self, qRoM):
+      self.lowerPositionLimit = np.matrix(qRoM)[:,0]
+      self.upperPositionLimit = np.matrix(qRoM)[:,1]
+      return self.lowerPositionLimit,self.upperPositionLimit
    
    def createData(self):
       self.data = self.model.createData()
