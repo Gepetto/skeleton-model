@@ -1,5 +1,8 @@
-import config
-import osim_parser
+import models.config as config
+import models.osim_parser as osim_parser
 
-robot = osim_parser.Osim2PinocchioModel()
-robot.parseModel(config.model_path)
+robot_pi = osim_parser.Osim2PinocchioModel()
+robot_pi.parseModel(config.model_path,config.mesh_path)
+
+robot_py = osim_parser.Osim2PythonModel()
+PyModel = robot_py.readModel(config.model_path)
