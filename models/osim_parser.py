@@ -275,7 +275,7 @@ class Osim2PinocchioModel:
             # add to visuals list
             for mesh in range(0, len(PyModel['Visuals'][body][1]['geometry_file']) ):
                 visual_name = os.path.splitext(PyModel['Visuals'][body][1]['geometry_file'][mesh])[0]
-                filename = mesh_path+'/'+visual_name+'.stl'
+                filename = mesh_path+'/'+visual_name+'.obj'
                 print 'Filename: '+filename
                 transform = np.matrix(PyModel['Visuals'][body][1]['transform'][mesh],dtype=np.float64).T
                 transform[3:6] =  osMpi  *transform[3:6]
