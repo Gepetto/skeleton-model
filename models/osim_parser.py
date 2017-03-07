@@ -62,7 +62,7 @@ class Osim2PythonModel:
         self.default_joint.append([joint_data, coordinate_data, spatial_data])
 
     def readModel(self,filename):
-        PyModel = {'Bodies':[], 'Joints':[], 'Visuals':[]}
+        PyModel = {'Bodies':[], 'Joints':[], 'Visuals':[],'Forces':[],'Point':[]}
         tree = xml.parse(filename)
         root = tree.getroot()
         # get body set
@@ -161,6 +161,38 @@ class Osim2PythonModel:
                     bones_data['opacity'].append(bones.find('opacity').text)
                 
                 PyModel['Visuals'].append([visuals_data, bones_data])
+
+        # get force set
+        for forces in root.findall('./Model/ForceSet/objects/Schutte1993Muscle_Deprecated'):
+            force_data = {'force_name':[],'type':[]}
+            force_data['force_name'].append(forces.get('name'))
+            force_data['type'].append('Schutte1993Muscle_Deprecated')
+            # point set
+            points = []
+            path_point_list =  forces.iter('PathPoint')
+            for point in path_point_list:
+                point_data = {'point_name':[], 'location':[], 'body':[]}
+                point_data['point_name'].append(point.get('name'))
+                point_data['location'].append((point.find('location').text).split())
+                point_data['body'].append(point.find('body').text)
+                points.append(point_data)
+            PyModel['Forces'].append([force_data,points]) 
+
+        for forces in root.findall('./Model/ForceSet/objects/Thelen2003Muscle'):
+            force_data = {'force_name':[],'type':[]}
+            force_data['force_name'].append(forces.get('name'))
+            force_data['type'].append('Thelen2003Muscle')
+            # point set
+            points = []
+            path_point_list =  forces.iter('PathPoint')
+            for point in path_point_list:
+                point_data = {'point_name':[], 'location':[], 'body':[]}
+                point_data['point_name'].append(point.get('name'))
+                point_data['location'].append((point.find('location').text).split())
+                point_data['body'].append(point.find('body').text)
+                points.append(point_data)
+            PyModel['Forces'].append([force_data,points])
+        
         return PyModel        
 
 
@@ -278,12 +310,23 @@ class Osim2PinocchioModel:
                 filename = mesh_path+'/'+visual_name+'.obj'
                 print 'Filename: '+filename
                 transform = np.matrix(PyModel['Visuals'][body][1]['transform'][mesh],dtype=np.float64).T
-                transform[3:6] =  osMpi  *transform[3:6]
+                transform[3:6] =  osMpi * transform[3:6]
                 transform[0:3] =  osMpi * transform[0:3]
                 self.visuals = self.builder.createVisuals(parent, joint_name, filename, scale_factors, transform)
             print '****'
         #add constraints
         self.lowerPositionLimit, self.upperPositionLimit = self.builder.addJointConstraints(np.matrix(jointLimits))
+        for force in range(0,len(PyModel['Forces'])):
+            force_name = PyModel['Forces'][force][0]['force_name'][0]
+            force_type = PyModel['Forces'][force][0]['type'][0]
+            points = []
+            for point in range(0,len(PyModel['Forces'][force][1])):
+                parent = PyModel['Forces'][force][1][point]['body'][0]
+                point_name = PyModel['Forces'][force][1][point]['point_name'][0]
+                location = osMpi * np.matrix([PyModel['Forces'][force][1][point]['location'][0]],dtype=np.float64).T
+                points.append([point_name,parent,location])
+            self.forces = self.builder.createForces(force_name,force_type,parent,points)
+        
 
     def parseModel(self, filename, mesh_path):
         ''' parseModel(filename)

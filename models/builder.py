@@ -8,6 +8,7 @@ class Pinocchio:
       # Skelette Meshes
       self.visuals = []
       self.visuals.append([0,'ground','none'])
+      self.forces = []
       self.FrameType = se3.FrameType.OP_FRAME
              
    def buildModel(self, parent, joint_model, joint_placement, joint_name,
@@ -29,6 +30,10 @@ class Pinocchio:
    def createVisuals(self, parent, joint_name, filename, scale_factors=None, transform=None):
       self.visuals.append([parent, joint_name, filename, scale_factors, transform ])
       return self.visuals
+
+   def createForces(self,force_name,force_type,parent,points):
+      self.forces.append([force_name,force_type,parent,points])
+      return self.forces
 
    def addJointConstraints(self, qRoM):
       self.lowerPositionLimit = np.matrix(qRoM)[:,0]
