@@ -340,14 +340,19 @@ def readOsim(filename):
         for rows in f:
             Data['data'].append(rows.split()[1:])
             Data['time'].append(float(rows.split()[0]))
-        
-    for rows in range (0,len(Data['data'][:])):
-        for cols in range (0,len(Data['data'][0])):
-            if cols in (3,4,5):
-                # translations
+
+    if file_extension == 'mot':
+        for rows in range (0,len(Data['data'][:])):
+            for cols in range (0,len(Data['data'][0])):
+                if cols in (3,4,5):
+                    # translations
+                    Data['data'][rows][cols] = float(Data['data'][rows][cols])
+                else:
+                    Data['data'][rows][cols] = np.deg2rad(float(Data['data'][rows][cols]))
+                    #print np.deg2rad(float(data['values'][rows][cols]))
+    else:
+        for rows in range (0,len(Data['data'][:])):
+            for cols in range (0,len(Data['data'][0])):
                 Data['data'][rows][cols] = float(Data['data'][rows][cols])
-            else:
-                Data['data'][rows][cols] = np.deg2rad(float(Data['data'][rows][cols]))
-                #print np.deg2rad(float(data['values'][rows][cols]))
-                               
     return Data 
+    
