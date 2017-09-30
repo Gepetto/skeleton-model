@@ -16,8 +16,9 @@ class Pinocchio:
       ''' Add a model to the kinematic three
       TODO add with bounds, check model.hpp
       '''
+      self.model.addFrame(joint_name, joint_id, parent, body_placement, se3.FrameType.OP_FRAME)
       self.model.addJoint(parent, joint_model, joint_placement, joint_name)
-      self.model.addJointFrame(joint_id, joint_id)
+      self.model.addJointFrame(joint_id, parent)
       ''' Append a body to the given joint in the kinematic tree
       '''
       self.model.appendBodyToJoint(joint_id, body_inertia, body_placement)
