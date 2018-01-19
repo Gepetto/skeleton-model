@@ -203,7 +203,7 @@ class Osim2PythonModel:
 
 
 
-''' **************** OPENSIM 2 PINOCCHIO MODEL **************** '''
+''' **************** PARSER OPENSIM 2 PINOCCHIO MODEL **************** '''
 class Osim2PinocchioModel:
     def __init__(self):
         self.builder = pm()
